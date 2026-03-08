@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h4 class="mt-3">Ended Listings</h4>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mt-2">
+    {% for close in closes %}
+        <div class="col">
+            <div class="card">
+                <img src="{{ close.image }}" class="card-img-top" alt="{{ close.title }}">
+
+                <div class="card-body">
+                    <h5>{{ close.title }}</h5>
+                    <p>{{ close.description|truncatewords:12 }}</p>
+
+                    <a href="{% url 'detail' close.id %}" class="btn btn-primary">View Listing</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>You have no ended listings.</p>
+    {% endfor %}
+</div>
+{% endblock %}

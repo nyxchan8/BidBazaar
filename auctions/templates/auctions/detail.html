@@ -1,0 +1,151 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if listing.status == listing.Status.CLOSED %}
+        {% if user == listing.winner %}
+            <div class="alert alert-success">
+                Congratulations! You won this auction.
+            </div>
+        {% elif user == listing.creator %}
+            <div class="alert alert-info">
+                Auction closed. Winner: {{ listing.winner }}
+            </div>
+        {% else %}
+            <div class="alert alert-secondary">
+                This auction has ended.
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="row g-0">
+
+            <div class="col-md-4 text-center p-3">
+                <img src="{{ listing.image }}"
+                    class="img-fluid rounded shadow-sm"
+                    style="max-height:380px; object-fit:contain;"
+                    alt="{{ listing.title }}">
+
+                {% if user.is_authenticated and listing.status == listing.Status.ACTIVE %}
+                    {% if user != listing.creator %}
+                        <form action="{% url 'watchlist_toggle' listing.id %}" method="POST" class="mt-3">
+                            {% csrf_token %}
+                            <button class="btn btn-success w-100">
+                                {% if user in listing.watchlist.all %}
+                                    Remove from Watchlist
+                                {% else %}
+                                    Add to Watchlist
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'endlist_toggle' listing.id %}" method="POST" class="mt-3">
+                            {% csrf_token %}
+                            <button class="btn btn-danger w-100">
+                                End Listing
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                {% if listing.status == listing.Status.CLOSED and user == listing.creator %}
+                    <button class="btn btn-secondary w-100 mt-3 disabled">
+                        Auction Closed
+                    </button>
+                {% endif %}
+            </div>
+
+            <div class="col-md-8">
+                <div class="card-body">
+
+                    <h3 class="card-title mb-3">{{ listing.title }}</h3>
+
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><strong>Description:</strong> {{ listing.description }}</li>
+                        <li class="list-group-item"><strong>Status:</strong> {{ listing.status }}</li>
+                        <li class="list-group-item"><strong>Category:</strong> {{ listing.category }}</li>
+                        <li class="list-group-item"><strong>Starting Bid:</strong> {{ listing.starting_bid }}</li>
+                        <li class="list-group-item"><strong>Highest Bid:</strong> {{ highest_bid|floatformat:2 }}</li>
+                        <li class="list-group-item"><strong>Seller:</strong> {{ listing.creator }}</li>
+                    </ul>
+
+                    {% if user.is_authenticated and listing.status == listing.Status.ACTIVE %}
+                        <div class="p-3 bg-light rounded">
+                            <h5 class="mb-3">Place Your Bid</h5>
+
+                            {% if user != listing.creator %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <input type="number" name="bid" class="form-control" placeholder="Enter your bid">
+                                        <button class="btn btn-success">Bid Now</button>
+                                    </div>
+                                </form>
+                                <small class="text-muted">
+                                    Your bid must be higher than the current price.
+                                </small>
+                            {% else %}
+                                <p class="text-danger">
+                                    You are the seller of this item and cannot place bids.
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% if listing.status == listing.Status.ACTIVE and user.is_authenticated %}
+        <div class="card shadow-sm p-3">
+
+            <h5 class="mb-3">Comments</h5>
+
+            <div class="list-group mb-3">
+                {% for comment in comments %}
+                    <div class="list-group-item border rounded mb-2">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ comment.user.username }}</strong>
+                            <small class="text-muted mt-1">
+                                {{ comment.created_at|date:"M d, Y H:i" }}
+                            </small>
+                        </div>
+                        <p class="mb-0">{{ comment.text }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted mt-3">No comments yet.</p>
+                {% endfor %}
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="comment_text"
+                        class="form-control mb-2"
+                        rows="3"
+                        placeholder="Write a comment..."></textarea>
+                <button class="btn btn-success w-100">Post Comment</button>
+            </form>
+        </div>
+    {% endif %}
+    
+    {% if not user.is_authenticated %}
+        <div class="alert alert-info">
+        Please <a href="{% url 'login' %}">log in</a> to place bids, comment, or add to watchlist.
+        </div>
+    {% endif %}
+
+    </div>
+{% endblock %}

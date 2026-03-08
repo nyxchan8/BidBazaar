@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container mt-4">
+    <h3 class="mb-3">{{ category.name }}</h3>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for item in items %}
+            <div class="col">
+                <div class="card h-100 shadow-sm rounded">
+                    <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}" style="object-fit:contain; max-height:200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description|truncatechars:50 }}</p>
+                        <p class="text-muted mb-0">Starting Bid: {{ item.starting_bid }}</p>
+                    </div>
+                    <div class="card-footer py-3">
+                        <a href="{% url 'detail' item.id %}" class="btn btn-success w-100">View Listing</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">No items in this category yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
