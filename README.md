@@ -2,63 +2,38 @@
 
 ## 🛠️ Technologies Used
 
-| Category       | Technology                |
+| Category       | Technology                |
 | -------------- | ------------------------- |
-| Framework      | Django 4.x                |
-| Language       | Python 3.11               |
-| Database       | SQLite (default)          |
-| Authentication | Django Auth               |
-| Frontend       | HTML, CSS, Bootstrap      |
-| Deployment     | Local / Optional: Railway |
+| Framework      | Django 4.x                |
+| Language       | Python 3.11               |
+| Database       | SQLite (default)          |
+| Authentication | Django Auth               |
+| Frontend       | HTML, CSS, Bootstrap      |
+| Deployment     | Local / Optional: Railway |
 
 ---
 
 ## 📂 Folder Structure
 
+This project has the following directory structure:
+
+```text
 commerce/
-|--auctions/
-| |--migrations/
-| |--templates/
-| | |--auctions/
-| |--admin.py
-| |--apps.py
-| |--forms.py
-| |--models.py
-| |--urls.py
-| |--views.py
-|--commerce/
-| |--settings.py
-| |--urls.py
-|--manage.py
-|--requirements.txt
-
----
-
-## 📦 Installation Guide
-
-```bash
-# 1. Clone the repository
-git clone <your-repo-url>
-cd commerce
-
-# 2. Create virtual environment
-python3 -m venv venv
-source venv/bin/activate       # macOS/Linux
-venv\Scripts\activate          # Windows
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Apply database migrations
-python manage.py makemigrations auctions
-python manage.py migrate
-
-# 5. Create superuser (admin)
-python manage.py createsuperuser
-
-# 6. Run the development server
-python manage.py runserver
-```
+├── auctions/
+│   ├── migrations/
+│   ├── templates/
+│   │   └── auctions/
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+├── commerce/
+│   ├── settings.py
+│   └── urls.py
+├── manage.py
+└── requirements.txt
 
 Open your browser and go to http://127.0.0.1:8000
 Register a user and test features: listings, bids, comments, watchlist
