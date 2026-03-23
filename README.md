@@ -36,15 +36,14 @@ commerce/
 └── requirements.txt
 ```
 ## 📦 Installation Guide
-
 ### 1. Clone the repository
 git clone <your-repo-url>
 cd commerce
 
 ### 2. Create virtual environment
 python3 -m venv venv
-source venv/bin/activate       # macOS/Linux
-venv\Scripts\activate          # Windows
+source venv/bin/activate       ### macOS/Linux
+venv\Scripts\activate          ### Windows
 
 ### 3. Install dependencies
 pip install -r requirements.txt
